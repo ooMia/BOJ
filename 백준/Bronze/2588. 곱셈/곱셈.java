@@ -26,13 +26,13 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        List<Integer> numbers = new ArrayList();
+        List<Integer> numbers = new ArrayList<Integer>();
         while (sc.hasNext())
             for (int n : Arrays.stream(sc.nextLine().split(System.lineSeparator().toString())).mapToInt(Integer::parseInt).toArray()
             )
                 numbers.add(n);
         sc.close();
-        
+
         int A = numbers.get(0), B = numbers.get(1);
         System.out.printf("%d\n%d\n%d\n%d\n",
                 A * (B % 10),
