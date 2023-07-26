@@ -17,23 +17,23 @@ for linkage in IN[1:]:
 
 
 # 2. search graph
-def bfs(graph, candidates: set):
+def bfs(graph, possibles: set):
     Q = collections.deque()
     nComp = 0
 
     # 2-2. repeat searching for unvisited nodes
-    while len(candidates) > 0:
-        Q.append(candidates.pop())
+    while len(possibles) > 0:
+        Q.append(possibles.pop())
 
         # 2-1. BFS
         while len(Q) > 0:
             startNode = Q.popleft()  # (pl&a | p&al)
             tmp = []
-            for node in candidates:
+            for node in possibles:
                 if adjM[startNode][node] == 1:
                     tmp.append(node)
             for node in tmp:
-                candidates.remove(node)
+                possibles.remove(node)
                 Q.append(node)  # (pl&a | p&al)
             # print(Q)
         nComp += 1
