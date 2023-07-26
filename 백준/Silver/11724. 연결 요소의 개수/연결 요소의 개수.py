@@ -30,7 +30,7 @@ def bfs(graph, possibles: set):
             startNode = Q.popleft()  # (pl&a | p&al)
             tmp = []
             for node in possibles:
-                if adjM[startNode][node] == 1:
+                if graph[startNode][node] == 1:
                     tmp.append(node)
             for node in tmp:
                 possibles.remove(node)
