@@ -1,7 +1,13 @@
 import sys
 
-isValid = lambda coor: not visM[coor[0]][coor[1]] and adjM[coor[0]][coor[1]]
-addTuples = lambda t1, t2: tuple(map(sum, zip(t1, t2)))
+
+def isValid(coor):
+    return not visM[coor[0]][coor[1]] and adjM[coor[0]][coor[1]]
+
+
+def addTuples(t1, t2):
+    return tuple(map(sum, zip(t1, t2)))
+
 
 def addPossibles(df, baseCoor):
     dys = (+2, +2, +1, +1, -1, -1, -2, -2)
@@ -21,8 +27,10 @@ def search(startCoor: tuple, destCoor: tuple):
         curCoor = curDepth.pop()
         visM[curCoor[0]][curCoor[1]] = True
 
-        if curCoor == destCoor: return timeSpent
-        else: addPossibles(nextDepth, curCoor)
+        if curCoor == destCoor:
+            return timeSpent
+        else:
+            addPossibles(nextDepth, curCoor)
 
         if len(curDepth) < 1:
             curDepth = nextDepth.copy()
