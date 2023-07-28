@@ -6,8 +6,11 @@ def search(nList, partialSum, diffSum):
     if len(nList) < 1:
         return 1 if partialSum == target else 0
 
-    # 모든 탐색은 순차적으로, 즉 최솟값에서부터 최댓값 방향으로 진행한다.
+    return search(nList[1:], partialSum, diffSum) +\
+        search(nList[1:], partialSum + abs(nList[0]), diffSum + abs(nList[0]))
 
+    # function description: search(nList, partialSum, diffSum)
+    # 모든 탐색은 순차적으로, 즉 최솟값에서부터 최댓값 방향으로 진행한다.
     # nList[0]에 대한 선택x/o로 나누어 재귀적 호출
 
     # 탐색의 각 단계는 각 요소의 선택 여부에 따라
@@ -19,9 +22,6 @@ def search(nList, partialSum, diffSum):
     # if e >= 0: partialSum += e, diffSum -= e
     # if e < 0: partialSum -= e, diffSum += e
     # > 일반화하면 partialSum += abs(e), diffSum += abs(e)
-
-    return search(nList[1:], partialSum, diffSum) +\
-        search(nList[1:], partialSum + abs(nList[0]), diffSum + abs(nList[0]))
 
 
 IN = list(map(lambda x: list(map(int, x.split())), sys.stdin.readlines()))
