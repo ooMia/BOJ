@@ -1,7 +1,5 @@
 import copy
-import pprint
 import sys
-from functools import reduce
 
 addTuples = lambda t1, t2: tuple(map(sum, zip(t1, t2)))
 isValidCoor = lambda coor: 0 <= coor[0] < nRows and 0 <= coor[1] < nCols and adjM[coor[0]][coor[1]] != 'T'
