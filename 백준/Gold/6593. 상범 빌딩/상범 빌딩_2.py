@@ -1,4 +1,3 @@
-import collections
 import sys
 
 def isValidCoor(node: tuple):
@@ -31,14 +30,13 @@ def getPossibles(adjM, visM, baseNode: tuple):
 
 def search(adjM, visM, startNode: tuple, destNode: tuple):
     visM[startNode[0]][startNode[1]][startNode[2]] = True
-    curDepth, nextDepth = collections.deque([startNode]), collections.deque()
+    curDepth, nextDepth = [startNode], []
     depth = 0
 
     while len(curDepth) > 0:
         node = curDepth.pop()
         if node == destNode: return depth
-
-        nextDepth.extend(getPossibles(adjM, visM, node))
+        else: nextDepth.extend(getPossibles(adjM, visM, node))
 
         if len(curDepth) < 1:
             curDepth = nextDepth.copy()
