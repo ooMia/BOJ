@@ -7,8 +7,8 @@ def solution(n, edges):
     
     while not is_all_leaf(graph, next_nodes):
         
-        current_nodes = next_nodes.copy()
-        next_nodes.clear()
+        current_nodes = next_nodes
+        next_nodes = set()
         
         for current_node in current_nodes:
             visited_nodes.add(current_node)
