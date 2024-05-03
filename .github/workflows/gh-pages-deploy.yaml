@@ -25,7 +25,7 @@ jobs:
             echo "Processing directory: $dir"
             echo "## [$(basename $dir)](basename $dir)" > $dir/README.md || echo "Failed to create README in $dir"
             echo "" >> $dir/README.md
-            for subdir in $(find $dir -maxdepth 1 -mindepth 1 -type d); doa
+            for subdir in $(find $dir -maxdepth 1 -mindepth 1 -type d); do
               echo "- [$(basename $subdir)]($subdir)" >> $dir/README.md || echo "Failed to updte README in $dir"
             done
           done
