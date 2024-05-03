@@ -33,11 +33,12 @@ jobs:
               for file in $(find $dir -type f); do
                 if [[ $(basename $file) != "README.md" ]]; then
                   echo "- [$(basename $file)]($(basename $file))" >> $dir/README.md
+          
+                  extension="${file##*.}"
+                  echo -e "```$extension" >> $dir/README.md
+                  cat $file >> $dir/README.md
+                  echo -e "\n```" >> $dir/README.md
                 fi
-              extension="${file##*.}"
-              echo -e "```$extension" >> $dir/README.md
-              cat $file >> $dir/README.md
-              echo -e "\n```" >> $dir/README.md
               done
             else
               echo "[LOG] CREATE README.md at $dir: index of sub-directories"
