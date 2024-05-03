@@ -18,11 +18,11 @@ jobs:
 
       - name: Update root README
         run: |
-          for subdir in $(find . -type d); do
-            if [[ $dir =~ ^\.\/\.github* ]] || [[ $dir =~ ^\.\/\.git* ]]; then
+          for subdir in $(find . -maxdepth 1 -type d); do
+            if [[ $subdir =~ ^\.\/\.github* ]] || [[ $subdir =~ ^\.\/\.git* ]]; then
               continue
             fi
-            echo "- [$(basename $subdir)]($(basename $subdir))" >> $dir/README.md
+            echo "- [$(basename $subdir)]($(basename $subdir))" >> $subdir/README.md
           done
         shell: bash
 
