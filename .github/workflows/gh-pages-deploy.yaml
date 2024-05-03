@@ -18,8 +18,8 @@ jobs:
 
       - name: Update README
         run: |
-          for dir in $(find / -type d -not -path '*/[^/]*'); do
-            if [[ $dir =~ ^\/\.github ]] || [[ $dir =~ ^\/\.git ]]; then
+          for dir in $(find . -type d -not -path '*/[^/]*'); do
+            if [[ $dir =~ ^\.\/\.github ]] || [[ $dir =~ ^\.\/\.git ]]; then
               continue
             fi
             echo "[LOG] Processing directory: $dir"
