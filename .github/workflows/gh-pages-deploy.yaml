@@ -18,7 +18,7 @@ jobs:
 
       - name: Update root README
         run: |
-          for subdir in $(find . -maxdepth 1 -type d); do
+          for subdir in $(find . -mindepth 1 -maxdepth 1 -type d); do
             if [[ $subdir =~ ^\.\/\.github* ]] || [[ $subdir =~ ^\.\/\.git* ]]; then
               continue
             fi
@@ -32,7 +32,7 @@ jobs:
           for dir in $(find . -type d); do
           
             # Skip irrelevant directories
-            if [[ $dir == . ]] ||[[ $dir =~ ^\.\/\.github* ]] || [[ $dir =~ ^\.\/\.git* ]]; then
+            if [[ $dir == . ]] || [[ $dir =~ ^\.\/\.github* ]] || [[ $dir =~ ^\.\/\.git* ]]; then
               continue
             fi
           
@@ -45,7 +45,8 @@ jobs:
           
             echo "## $dir" > $dir/README.md || echo "Failed to create README in $dir"
             echo "" >> $dir/README.md
-            echo "- [./..]($(dirname $dir))" >> $dir/README.md
+
+            echo "[$(dirname $dir)]($(dirname $dir))" >> $dir/README.md
             for subdir in $(find $dir -mindepth 1 -maxdepth 1 -type d); do
               echo "- [$(basename $subdir)]($(basename $subdir))" >> $dir/README.md
             done
