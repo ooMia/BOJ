@@ -12,6 +12,16 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
 
+      - name: Update README
+        run: |
+          echo "# $(basename $PWD)" > README.md
+          echo "" >> README.md
+          echo "## Sub-directories in src" >> README.md
+          for dir in $(find src -maxdepth 2 -type d); do
+            echo "- [$dir]($dir)" >> README.md
+          done
+        shell: bash
+        
       - name: Publish current workdir (which contains generated content) to GitHub Pages
         uses: rayluo/github-pages-overwriter@v1.3
 
