@@ -16,23 +16,13 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
 
-      - name: Create root README.md
-        run: |
-          for rootdir in $(find . -mindepth 1 -maxdepth 1 -type d); do
-            if [[ $rootdir =~ ^\.\/\.github* ]] || [[ $rootdir =~ ^\.\/\.git* ]]; then
-              continue
-            fi
-            echo "- [$(basename $rootdir)]($(basename $rootdir))" >> $rootdir/README.md
-          done
-        shell: bash
-
       - name: Create sub README.md
         run: |
           # Loop over all directories in the repository
           for dir in $(find . -mindepth 1 -type d); do
           
             # Skip irrelevant directories
-            if [[ $dir == . ]] || [[ $dir =~ ^\.\/\.github* ]] || [[ $dir =~ ^\.\/\.git* ]]; then
+            if [[ $dir =~ ^\.\/\.github* ]] || [[ $dir =~ ^\.\/\.git* ]]; then
               continue
             fi
           
@@ -50,6 +40,16 @@ jobs:
               echo "- [$(basename $subdir)]($(basename $subdir))" >> $dir/README.md
             done
           
+          done
+        shell: bash
+
+      - name: Create root README.md
+        run: |
+          for dir in $(find . -mindepth 1 -maxdepth 1 -type d); do
+            if [[ $dir =~ ^\.\/\.github* ]] || [[ $dir =~ ^\.\/\.git* ]]; then
+              continue
+            fi
+            echo "- [$(basename $dir)]($(basename $dir))" >> ./README.md
           done
         shell: bash
 
