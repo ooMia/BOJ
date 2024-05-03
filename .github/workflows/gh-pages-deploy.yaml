@@ -34,9 +34,10 @@ jobs:
                 if [[ $(basename $file) != "README.md" ]]; then
                   echo "- [$(basename $file)]($(basename $file))" >> $dir/README.md
                   # cat file to README.md as code block with extension
-                  echo "```$(basename $file | awk -F . '{print $NF}')" >> $dir/README.md
-                  cat $file >> $dir/README.md
-                  echo "```" >> $dir/README.md
+                  extension=$(basename "$file" | awk -F . '{print $NF}')
+                  printf -- "\n\n```%s\n" "$extension" >> "$dir/README.md"
+                  cat "$file" >> "$dir/README.md"
+                  printf "\n```\n" >> "$dir/README.md"
                 fi
               done
             else
