@@ -18,14 +18,14 @@ jobs:
 
       - name: Update README
         run: |
-          for dir in $(find . -maxdepth 2 -type d); do
-            if [[ $dir =~ ^\./\.github ]] || [[ $dir =~ ^\./\.git ]]; then
+          for dir in $(find / -type d -not -path '*/[^/]*'); do
+            if [[ $dir =~ ^\/\.github ]] || [[ $dir =~ ^\/\.git ]]; then
               continue
             fi
-            echo "Processing directory: $dir"
-            echo "## [$dir](/$(basename $dir))" > $dir/README.md || echo "Failed to create README in $dir"
+            echo "[LOG] Processing directory: $dir"
+            echo "## [$dir]($(basename $dir))" > $dir/README.md || echo "Failed to create README in $dir"
             echo "" >> $dir/README.md
-            for subdir in $(find $dir -maxdepth 1 -mindepth 1 -type d); do
+            for subdir in $(find $dir -type d); do
               echo "- [$(basename $subdir)]($(basename $subdir))" >> $dir/README.md || echo "Failed to update README in $dir"
             done
           done
