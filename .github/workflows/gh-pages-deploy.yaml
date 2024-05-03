@@ -28,9 +28,10 @@ jobs:
           
             # Skip directories that do not contain subdirectories
             if [ -z "$(find "$dir" -mindepth 1 -maxdepth 1 -type d)" ]; then
-              echo "## [소스 코드]()" >> $dir/README.md
+              echo "" >> $dir/README.md
+              echo "## 소스 코드" >> $dir/README.md
               for file in $(find $dir -type f); do
-                if [[ $subdir =~ ^\.\/README\.md ]]; then
+                if [[ $file =~ ^\.\/README\.md ]]; then
                   continue
                 fi
                 echo "- [$(basename $file)]($(basename $file))" >> $dir/README.md
