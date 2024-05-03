@@ -32,6 +32,7 @@ jobs:
               echo "## 소스 코드" >> $dir/README.md
               for file in $(find $dir -type f); do
                 if [[ $(basename $file) != "README.md" ]]; then
+                  ls -l $dir
                   echo "- [$(basename $file)]($(basename $file))" >> $dir/README.md
           
                   echo "[LOG] $file: append to $dir/README.md"
@@ -39,9 +40,9 @@ jobs:
                   extension="${file##*.}"
                   echo "[LOG] $file: extension is $extension"
 
-                  echo -e "\n\n```$extension" >> $dir/README.md
+                  printf "\n\n```%s" "$extension" >> "$dir/README.md"
                   cat "$file" >> "$dir/README.md"
-                  echo -e "\n```" >> $dir/README.md
+                  printf "\n```\n" >> "$dir/README.md"
                 fi
               done
             else
