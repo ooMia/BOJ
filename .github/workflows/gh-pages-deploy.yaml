@@ -25,7 +25,7 @@ jobs:
             if [[ $dir =~ ^\.\/\.github* ]] || [[ $dir =~ ^\.\/\.git* ]]; then
               continue
             fi
-          
+            
             if [ -z "$(find "$dir" -mindepth 1 -maxdepth 1 -type d)" ]; then
               echo "[LOG] UPDATE README.md at $dir: link of source code"
               echo -e "\n\n\n" >> $dir/README.md
@@ -34,6 +34,10 @@ jobs:
                 if [[ $(basename $file) != "README.md" ]]; then
                   echo "- [$(basename $file)]($(basename $file))" >> $dir/README.md
                 fi
+              extension="${file##*.}"
+              echo -e "```$extension" >> $dir/README.md
+              cat $file >> $dir/README.md
+              echo -e "\n```" >> $dir/README.md
               done
             else
               echo "[LOG] CREATE README.md at $dir: index of sub-directories"
@@ -42,11 +46,6 @@ jobs:
               for subdir in $(find $dir -mindepth 1 -maxdepth 1 -type d); do
                 echo "- [$(basename $subdir)]($(basename $subdir))" >> $dir/README.md
               done
-              
-              extension="${file##*.}"
-              echo -e "```$extension" >> $dir/README.md
-              cat $file >> $dir/README.md
-              echo -e "\n```" >> $dir/README.md
             fi
           
           done
