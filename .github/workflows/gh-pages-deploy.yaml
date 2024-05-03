@@ -27,30 +27,24 @@ jobs:
             fi
             
             if [ -z "$(find "$dir" -mindepth 1 -maxdepth 1 -type d)" ]; then
-              printf -- "[LOG] UPDATE README.md at %s: link of source code\n" "$dir"
-              printf -- "\n\n\n" >> $dir/README.md
-              printf -- "## 소스 코드\n" >> $dir/README.md
+              echo "[LOG] UPDATE README.md at $dir: link of source code"
+              echo -e "\n\n\n" >> $dir/README.md
+              echo "## 소스 코드" >> $dir/README.md
               for file in $(find $dir -type f); do
                 if [[ $(basename $file) != "README.md" ]]; then
-                  ls -l $dir
-                  printf -- "- [%s](%s)\n" "$(basename $file)" "$(basename $file)" >> $dir/README.md
-          
-                  printf -- "[LOG] %s: append to %s/README.md\n" "$file" "$dir"
-
-                  extension="${file##*.}"
-                  printf -- "[LOG] %s: extension is %s\n" "$file" "$extension"
-
-                  printf -- "\n\n```%s\n" "$extension" >> $dir/README.md
-                  cat "$file" >> $dir/README.md
-                  printf -- "\n```\n" >> $dir/README.md
+                  echo "- [$(basename $file)]($(basename $file))" >> $dir/README.md
+                  # cat file to README.md as code block with extension
+                  echo "```$(basename $file | awk -F . '{print $NF}')" >> $dir/README.md
+                  cat $file >> $dir/README.md
+                  echo "```" >> $dir/README.md
                 fi
               done
             else
-              printf -- "[LOG] CREATE README.md at %s: index of sub-directories\n" "$dir"
-              printf -- "## %s\n" "$dir" > $dir/README.md || printf -- "Failed to create README in %s\n" "$dir"
-              printf -- "\n" >> $dir/README.md
+              echo "[LOG] CREATE README.md at $dir: index of sub-directories"
+              echo "## $dir" > $dir/README.md || echo "Failed to create README in $dir"
+              echo "" >> $dir/README.md
               for subdir in $(find $dir -mindepth 1 -maxdepth 1 -type d); do
-                printf -- "- [%s](%s)\n" "$(basename $subdir)" "$(basename $subdir)" >> $dir/README.md
+                echo "- [$(basename $subdir)]($(basename $subdir))" >> $dir/README.md
               done
             fi
           done
@@ -58,12 +52,12 @@ jobs:
 
       - name: Create root README.md
         run: |
-          printf -- "" > ./README.md
+          echo "" > ./README.md
           for dir in $(find . -mindepth 1 -maxdepth 1 -type d); do
             if [[ $dir =~ ^\.\/\.github* ]] || [[ $dir =~ ^\.\/\.git* ]]; then
               continue
             fi
-            printf -- "- [%s](%s)\n" "$(basename $dir)" "$(basename $dir)" >> ./README.md
+            echo "- [$(basename $dir)]($(basename $dir))" >> ./README.md
           done
         shell: bash
 
