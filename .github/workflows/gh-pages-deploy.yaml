@@ -18,7 +18,7 @@ jobs:
 
       - name: Update root README
         run: |
-          for subdir in $(find . -mindepth 1 -maxdepth 1 -type d); do
+          for subdir in $(find . -type d); do
             if [[ $dir =~ ^\.\/\.github* ]] || [[ $dir =~ ^\.\/\.git* ]]; then
               continue
             fi
