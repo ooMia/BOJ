@@ -1,6 +1,6 @@
 # 프로그래머스
 
-- [Lv 0: legacy](Unrated)
+- [Lv 0: legacy](lv0)
 - [Lv 0](0)
 - [Lv 1](1)
 - [Lv 2](2)
