@@ -16,7 +16,7 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
 
-      - name: Create sub README.md
+      - name: Update sub README.md
         run: |
           # Loop over all directories in the repository
           for dir in $(find . -mindepth 1 -type d); do
@@ -28,7 +28,7 @@ jobs:
           
             if [ -z "$(find "$dir" -mindepth 1 -maxdepth 1 -type d)" ]; then
               echo "[LOG] UPDATE README.md at $dir: link of source code"
-              echo "" >> $dir/README.md
+              echo -e "\n\n\n" >> $dir/README.md
               echo "## 소스 코드" >> $dir/README.md
               for file in $(find $dir -type f); do
                 if [[ $(basename $file) != "README.md" ]]; then
