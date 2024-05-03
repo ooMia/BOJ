@@ -9,6 +9,7 @@ permissions:
   actions: write
   contents: write
   
+  
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -19,6 +20,9 @@ jobs:
       - name: Update README
         run: |
           for dir in $(find . -maxdepth 2 -type d); do
+            if [ $dir == "./.github" ]; then
+              continue
+            fi
             echo "# [- $(basename $dir)]($dir)" > $dir/README.md
             echo "" >> $dir/README.md
             echo "## [- $(basename $dir)]($dir)" >> $dir/README.md
@@ -26,13 +30,12 @@ jobs:
               echo "- [$(basename $subdir)]($subdir)" >> $dir/README.md
             done
           done
-        shell: bash
+        shell: bash  
         
       - name: Publish current workdir (which contains generated content) to GitHub Pages
         uses: rayluo/github-pages-overwriter@v1.3
 
         with:
-
           # Optional. Default value "." means the root directory of your project will be published.
           # You can use whatever directory your project uses, for example "wwwroot".
           # Such a directory does *not* have to already exist in your repo,
