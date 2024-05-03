@@ -27,17 +27,11 @@ jobs:
             fi
             
             if [ -z "$(find "$dir" -mindepth 1 -maxdepth 1 -type d)" ]; then
-              echo "[LOG] UPDATE README.md at $dir: link of source code"
               echo -e "\n\n\n" >> $dir/README.md
               echo "## 소스 코드" >> $dir/README.md
               for file in $(find $dir -type f); do
                 if [[ $(basename $file) != "README.md" ]]; then
                   echo "- [$(basename $file)]($(basename $file))" >> $dir/README.md
-                  # cat file to README.md as code block with extension
-                  extension=$(basename "$file" | awk -F . '{print $NF}')
-                  printf -- "\n\n```%s\n" "$extension" >> "$dir/README.md"
-                  cat "$file" >> "$dir/README.md"
-                  printf "\n```\n" >> "$dir/README.md"
                 fi
               done
             else
@@ -48,6 +42,7 @@ jobs:
                 echo "- [$(basename $subdir)]($(basename $subdir))" >> $dir/README.md
               done
             fi
+            
           done
         shell: bash
 
