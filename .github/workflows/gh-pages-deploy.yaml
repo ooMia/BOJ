@@ -14,11 +14,13 @@ jobs:
 
       - name: Update README
         run: |
-          echo "# $(basename $PWD)" > README.md
-          echo "" >> README.md
-          echo "## Sub-directories in src" >> README.md
-          for dir in $(find src -maxdepth 2 -type d); do
-            echo "- [$dir]($dir)" >> README.md
+          for dir in $(find . -maxdepth 2 -type d); do
+            echo "# $(basename $dir)" > $dir/README.md
+            echo "" >> $dir/README.md
+            echo "## Sub-directories in $(basename $dir)" >> $dir/README.md
+            for subdir in $(find $dir -maxdepth 1 -mindepth 1 -type d); do
+              echo "- [$(basename $subdir)]($subdir)" >> $dir/README.md
+            done
           done
         shell: bash
         
