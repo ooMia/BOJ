@@ -35,8 +35,8 @@ jobs:
                   echo "- [$(basename $file)]($(basename $file))" >> $dir/README.md
           
                   extension="${file##*.}"
-                  echo -e "```$extension" >> $dir/README.md
-                  cat -v $file >> $dir/README.md
+                  echo -e "\n\n```$extension" >> $dir/README.md
+                  cat -v $file >> $dir/README.md || echo "Failed to add content of $file to README.md" >&2
                   echo -e "\n```" >> $dir/README.md
                 fi
               done
@@ -48,7 +48,6 @@ jobs:
                 echo "- [$(basename $subdir)]($(basename $subdir))" >> $dir/README.md
               done
             fi
-          
           done
         shell: bash
 
