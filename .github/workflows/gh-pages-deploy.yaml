@@ -22,7 +22,7 @@ jobs:
           for dir in $(find . -type d); do
           
             # Skip irrelevant directories
-            if [[ $dir =~ ^\.\/\.github ]] || [[ $dir =~ ^\.\/\.git ]]; then
+            if [[ $dir =~ ^\.\/\.github* ]] || [[ $dir =~ ^\.\/\.git* ]]; then
               continue
             fi
           
@@ -32,9 +32,14 @@ jobs:
             fi
           
             echo "[LOG] Processing directory: $dir"
-            echo "## $dir" > $dir/README.md || echo "Failed to create README in $dir"
-            echo "" >> $dir/README.md
-            echo "- [..]($(..))" >> $dir/README.md
+          
+            # If the directory is not the root directory, add the title and the link to the parent directory
+            if [[ $dir != "." ]]; then
+              echo "## $dir" > $dir/README.md || echo "Failed to create README in $dir"
+              echo "" >> $dir/README.md
+              echo "- [./..]($(dirname $dir))" >> $dir/README.md
+            fi
+          
             for subdir in $(find $dir -mindepth 1 -maxdepth 1 -type d); do
               echo "- [$(basename $subdir)]($(basename $subdir))" >> $dir/README.md
             done
