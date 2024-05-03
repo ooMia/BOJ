@@ -19,11 +19,15 @@ jobs:
       - name: Update README
         run: |
           for dir in $(find . -maxdepth 2 -type d); do
-            echo "# [- $(basename $dir)]($dir)" > $dir/README.md
+            if [ $dir == "./.github" ]; then
+              continue
+            fi
+            echo "Processing directory: $dir"
+            echo "# [- $(basename $dir)]($dir)" > $dir/README.md || echo "Failed to create README in $dir"
             echo "" >> $dir/README.md
             echo "## [- $(basename $dir)]($dir)" >> $dir/README.md
             for subdir in $(find $dir -maxdepth 1 -mindepth 1 -type d); do
-              echo "- [$(basename $subdir)]($subdir)" >> $dir/README.md
+              echo "- [$(basename $subdir)]($subdir)" >> $dir/README.md || echo "Failed to update README in $dir"
             done
           done
         shell: bash
