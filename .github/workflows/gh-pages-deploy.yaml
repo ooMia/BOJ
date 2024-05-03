@@ -19,7 +19,7 @@ jobs:
       - name: Update README
         run: |
           for dir in $(find . -maxdepth 2 -type d); do
-            if [[ $dir == ./.github* ]] || [[ $dir == ./.git* ]]; then
+            if [[ $dir =~ ^\./\.github ]] || [[ $dir =~ ^\./\.git ]]; then
               continue
             fi
             echo "Processing directory: $dir"
