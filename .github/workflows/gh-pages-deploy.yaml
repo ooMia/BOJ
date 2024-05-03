@@ -40,7 +40,7 @@ jobs:
                   echo "[LOG] $file: extension is $extension"
 
                   echo -e "\n\n```$extension" >> $dir/README.md
-                  cat $file >> $dir/README.md
+                  cat "$file" >> "$dir/README.md"
                   echo -e "\n```" >> $dir/README.md
                 fi
               done
