@@ -45,6 +45,7 @@ jobs:
 
       - name: Create root README.md
         run: |
+          echo "" > ./README.md
           for dir in $(find . -mindepth 1 -maxdepth 1 -type d); do
             if [[ $dir =~ ^\.\/\.github* ]] || [[ $dir =~ ^\.\/\.git* ]]; then
               continue
