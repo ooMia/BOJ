@@ -23,17 +23,13 @@ jobs:
               continue
             fi
             echo "Processing directory: $dir"
-            echo "## [$(basename $dir)]($dir)" > $dir/README.md || echo "Failed to create README in $dir"
+            echo "## [$dir](/$(basename $dir))" > $dir/README.md || echo "Failed to create README in $dir"
             echo "" >> $dir/README.md
             for subdir in $(find $dir -maxdepth 1 -mindepth 1 -type d); do
               echo "- [$(basename $subdir)]($(basename $subdir))" >> $dir/README.md || echo "Failed to update README in $dir"
             done
           done
         shell: bash
-
-      - name: Print tree
-        run: |
-          echo . && find . -type d -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'
 
       - name: Publish current workdir (which contains generated content) to GitHub Pages
         uses: rayluo/github-pages-overwriter@v1.3
