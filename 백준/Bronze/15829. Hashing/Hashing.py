@@ -8,7 +8,7 @@ def hash(s: str) -> int:
     res = 0
     for i, ch in enumerate(s):
         res += (char_to_int(ch) * (r**i)) % M
-    return res
+    return res % M
 
 
 from sys import stdin
