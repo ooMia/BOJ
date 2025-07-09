@@ -12,7 +12,7 @@ interface IParser {
 }
 
 interface IRunner {
-    void run();
+    void run() throws IOException;
 }
 
 public class Main {
@@ -21,11 +21,15 @@ public class Main {
     static final IParser parser = new Parser(br);
     static final IRunner runner = new Runner(parser, bw);
 
-    public static void main(String[] args) throws IOException {
-        runner.run();
-        bw.flush();
-        bw.close();
-        br.close();
+    public static void main(String[] args) {
+        try {
+            runner.run();
+            bw.flush();
+            bw.close();
+            br.close();
+        } catch (IOException e) {
+            System.err.println(e);
+        }
     }
 }
 
@@ -37,7 +41,7 @@ class Parser implements IParser {
     public Parser(BufferedReader br) {
         this.reader = br;
         try {
-            reader.readLine();
+            reader.readLine(); // Skip the first line
         } catch (IOException e) {
             throw new IllegalArgumentException();
         }
@@ -45,21 +49,18 @@ class Parser implements IParser {
 
     @Override
     public QInput next() {
+        String[] parts;
         try {
             String line = reader.readLine();
-            if (line == null) {
-                hasNextLine = false;
-                return null;
-            }
-            String[] parts = line.split(" ");
-            int a = Integer.parseInt(parts[0]);
-            Integer b = parts.length > 1 ? Integer.parseInt(parts[1]) : null;
-            cache.set(a, b);
-            return cache;
-        } catch (IOException e) {
+            parts = line.split(" ");
+        } catch (IOException | NullPointerException e) {
             hasNextLine = false;
             return null;
         }
+        int a = Integer.parseInt(parts[0]);
+        Integer b = parts.length > 1 ? Integer.parseInt(parts[1]) : null;
+        cache.set(a, b);
+        return cache;
     }
 
     @Override
@@ -95,7 +96,7 @@ class QInput {
 class Runner implements IRunner {
     final IParser parser;
     final BufferedWriter writer;
-    final ArrayDeque<Integer> stack = new ArrayDeque<>();
+    final ArrayDeque<Integer> stack = new ArrayDeque<>(); // Java Stack is synchronized, which can be inefficient.
 
     public Runner(IParser parser, BufferedWriter bw) {
         this.parser = parser;
@@ -128,18 +129,14 @@ class Runner implements IRunner {
                 writer.newLine();
                 break;
             default:
-                throw new IllegalArgumentException("Invalid operation code: " + input.opCode());
+                throw new IllegalArgumentException();
         }
     }
 
     @Override
-    public void run() {
-        try {
-            while (parser.hasNext()) {
-                iterate();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public void run() throws IOException {
+        while (parser.hasNext()) {
+            iterate();
         }
     }
 }
