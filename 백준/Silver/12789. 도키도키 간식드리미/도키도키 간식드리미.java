@@ -73,8 +73,7 @@ class Supplier implements ISupplier {
     final BufferedReader reader;
     final QInput _cache = new QInput();
 
-    private final int goalId;
-    private int needId;
+    private int needId = 1;
 
     final Queue<Integer> source;
     final Stack<Integer> temp;
@@ -82,9 +81,7 @@ class Supplier implements ISupplier {
     public Supplier(BufferedReader br) {
         this.reader = br;
         try {
-            int nPeople = Integer.parseInt(reader.readLine());
-            this.goalId = nPeople;
-            this.needId = 1;
+            reader.readLine(); // 첫 줄은 무시
 
             List<Integer> ids = Stream.of(reader.readLine().split(" "))
                     .mapToInt(Integer::parseInt)
@@ -107,15 +104,18 @@ class Supplier implements ISupplier {
 
     @Override
     public boolean hasNext() {
-        boolean hasSource = !source.isEmpty();
-        boolean hasTemp = !temp.isEmpty();
-        boolean hasTempAlive = !hasSource && hasTemp && temp.peek() == needId;
-        return hasSource || hasTempAlive;
+        // 소스에 데이터가 있으면 계속 처리
+        if (!source.isEmpty()) {
+            return true;
+        }
+
+        // 소스가 비어있어도 temp에서 처리할 수 있는 데이터가 있으면 계속
+        return !temp.isEmpty() && temp.peek() == needId;
     }
 
     @Override
     public boolean isSuccess() {
-        return !hasNext() && needId > goalId;
+        return source.isEmpty() && temp.isEmpty();
     }
 
     @Override
@@ -130,7 +130,6 @@ class Supplier implements ISupplier {
             return;
         }
         temp.push(id);
-        // System.err.println("source -> temp: " + id);
     }
 
     @Override
@@ -139,40 +138,28 @@ class Supplier implements ISupplier {
         if (id == null) {
             return;
         }
-        // System.err.println("source -> dest: " + id);
         needId++;
     }
 
     @Override
     public void tempToDest() {
-        try {
-            Integer id = temp.pop();
-            if (id == null) {
-                return;
-            }
-            // System.err.println("temp -> dest: " + id);
-            needId++;
-        } catch (EmptyStackException e) {
+        if (temp.isEmpty()) {
+            return;
         }
+
+        Integer id = temp.pop();
+        needId++;
     }
 }
 
 // record pattern
 class QInput {
-    private Integer sourceId;
-    private Integer tempId;
+    Integer sourceId;
+    Integer tempId;
 
     public void set(Integer sourceId, Integer tempId) {
         this.sourceId = sourceId;
         this.tempId = tempId;
-    }
-
-    public Integer sourceId() {
-        return sourceId;
-    }
-
-    public Integer tempId() {
-        return tempId;
     }
 }
 
@@ -187,12 +174,12 @@ class Consumer implements IConsumer {
 
     @Override
     public void consume(QInput input) throws IOException {
-        if (supplier.isValidId(input.sourceId())) {
+        if (supplier.isValidId(input.sourceId)) {
             supplier.sourceToDest();
             return;
         }
 
-        if (supplier.isValidId(input.tempId())) {
+        if (supplier.isValidId(input.tempId)) {
             supplier.tempToDest();
             return;
         }
