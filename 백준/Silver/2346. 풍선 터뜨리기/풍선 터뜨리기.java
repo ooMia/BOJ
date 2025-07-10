@@ -3,22 +3,18 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-interface ISupplier {
+interface ISupplier extends IStructModifier, IStructState {
     QInput next();
-
     boolean hasNext();
 }
 
 interface IConsumer {
     void consume(QInput input) throws IOException;
-
     void flush() throws IOException;
 }
 
@@ -48,25 +44,29 @@ public class Main {
     }
 }
 
-// ====== Problem Domain ======
+interface IStructModifier {
+}
+
+interface IStructState {
+}
 
 class Supplier implements ISupplier {
     final BufferedReader reader;
-
-    final Deque<QInput> deque = new ArrayDeque<>();
+    final List<QInput> balloons = new ArrayList<>();
+    int currentIndex = 0;
 
     public Supplier(BufferedReader br) {
         this.reader = br;
         try {
             reader.readLine(); // 첫 줄은 무시
-            List<Integer> parts = Arrays.stream(reader.readLine().split(" "))
+            List<Integer> values = Arrays.stream(reader.readLine().split(" "))
                     .map(Integer::parseInt)
                     .collect(Collectors.toList());
 
-            for (int i = 0; i < parts.size(); i++) {
-                QInput input = new QInput();
-                input.set(i + 1, parts.get(i));
-                deque.add(input);
+            for (int i = 0; i < values.size(); i++) {
+                QInput balloon = new QInput();
+                balloon.set(i + 1, values.get(i));
+                balloons.add(balloon);
             }
         } catch (Exception e) {
             throw new IllegalArgumentException();
@@ -75,43 +75,51 @@ class Supplier implements ISupplier {
 
     @Override
     public QInput next() {
-        var res = deque.poll();
-        if (deque.isEmpty()) {
-            return res;
+        if (balloons.isEmpty()) {
+            return null;
         }
-
-        int move = res.value;
-        if (move > 0) {
-            move -= 1;
+        
+        QInput currentBalloon = balloons.get(currentIndex);
+        int moveCount = currentBalloon.value;
+        
+        // 현재 풍선을 제거
+        balloons.remove(currentIndex);
+        
+        // 모든 풍선을 터뜨렸으면 반환
+        if (balloons.isEmpty()) {
+            return currentBalloon;
         }
-        move %= deque.size();
-        while (move != 0) {
-            if (move > 0) {
-                deque.addLast(deque.pollFirst());
-                move--;
-            } else {
-                deque.addFirst(deque.pollLast());
-                move++;
+        
+        // 다음 풍선 위치 계산
+        if (moveCount > 0) {
+            // 양수: 오른쪽으로 이동
+            currentIndex = (currentIndex + moveCount - 1) % balloons.size();
+        } else {
+            // 음수: 왼쪽으로 이동
+            currentIndex = (currentIndex + moveCount) % balloons.size();
+            if (currentIndex < 0) {
+                currentIndex += balloons.size();
             }
         }
-        return res;
+        
+        return currentBalloon;
     }
 
     @Override
     public boolean hasNext() {
-        return !deque.isEmpty();
+        return !balloons.isEmpty();
     }
-
 }
 
-// record pattern
 class QInput {
-    int id; // 풍선의 번호
-    int value; // 풍선 안에 적힌 값
+    int id;
+    int value;
+    boolean used;
 
     public void set(int id, int value) {
         this.id = id;
         this.value = value;
+        this.used = false;
     }
 }
 
