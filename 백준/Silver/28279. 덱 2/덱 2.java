@@ -15,6 +15,8 @@ interface ISupplier extends IStructModifier, IStructState {
 
 interface IConsumer {
     void consume(QInput input) throws IOException;
+
+    void flush() throws IOException;
 }
 
 public class Main {
@@ -33,7 +35,7 @@ public class Main {
             e.printStackTrace();
         } finally {
             try {
-                bw.flush();
+                consumer.flush();
                 bw.close();
                 br.close();
             } catch (IOException e) {
@@ -159,6 +161,7 @@ class QInput {
 class Consumer implements IConsumer {
     final BufferedWriter writer;
     final ISupplier supplier;
+    final StringBuilder sb = new StringBuilder();
 
     public Consumer(BufferedWriter bw, ISupplier supplier) {
         this.writer = bw;
@@ -175,23 +178,29 @@ class Consumer implements IConsumer {
                 supplier.C2_pushBack(input.operand);
                 break;
             case 3:
-                writer.write(supplier.C3_popFront() + "\n");
+                sb.append(supplier.C3_popFront()).append('\n');
                 break;
             case 4:
-                writer.write(supplier.C4_popBack() + "\n");
+                sb.append(supplier.C4_popBack()).append('\n');
                 break;
             case 5:
-                writer.write(supplier.C5_size() + "\n");
+                sb.append(supplier.C5_size()).append('\n');
                 break;
             case 6:
-                writer.write(supplier.C6_isEmpty() + "\n");
+                sb.append(supplier.C6_isEmpty()).append('\n');
                 break;
             case 7:
-                writer.write(supplier.C7_peekFront() + "\n");
+                sb.append(supplier.C7_peekFront()).append('\n');
                 break;
             case 8:
-                writer.write(supplier.C8_peekBack() + "\n");
+                sb.append(supplier.C8_peekBack()).append('\n');
                 break;
         }
+    }
+
+    @Override
+    public void flush() throws IOException {
+        writer.write(sb.toString());
+        writer.flush();
     }
 }
