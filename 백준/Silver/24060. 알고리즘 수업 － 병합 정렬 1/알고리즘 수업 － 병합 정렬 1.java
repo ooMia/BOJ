@@ -116,13 +116,14 @@ class Consumer implements IConsumer {
     @Override
     public void consume(QInput input) throws IOException {
         this.nStore = input.nRemainingStore;
-        merge_sort(input.numbers, 0, input.numbers.size() - 1);
+        var numbers = input.numbers.stream().mapToInt(Integer::intValue).toArray();
+        merge_sort(numbers, 0, numbers.length - 1);
         if (nStore > 0) {
             sb.append("-1\n"); // nStore가 0보다 크면 -1 출력
         }
     }
 
-    private void merge_sort(List<Integer> numbers, int p, int r) {
+    private void merge_sort(int[] numbers, int p, int r) {
         if (p < r) {
             int q = (p + r) / 2; // 중간 지점
             merge_sort(numbers, p, q); // 전반부 정렬
@@ -131,30 +132,30 @@ class Consumer implements IConsumer {
         }
     }
 
-    private void merge(List<Integer> numbers, int p, int q, int r) {
+    private void merge(int[] numbers, int p, int q, int r) {
         int i = p, j = q + 1, t = 0;
-        int[] tmp = new int[r - p + 1];
+        var tmp = new int[r - p + 1];
 
         while (i <= q && j <= r) {
-            if (numbers.get(i) <= numbers.get(j)) {
-                tmp[t++] = numbers.get(i++);
+            if (numbers[i] <= numbers[j]) {
+                tmp[t++] = numbers[i++];
             } else {
-                tmp[t++] = numbers.get(j++);
+                tmp[t++] = numbers[j++];
             }
         }
         while (i <= q) { // 왼쪽 배열 부분이 남은 경우
-            tmp[t++] = numbers.get(i++);
+            tmp[t++] = numbers[i++];
         }
         while (j <= r) { // 오른쪽 배열 부분이 남은 경우
-            tmp[t++] = numbers.get(j++);
+            tmp[t++] = numbers[j++];
         }
         i = p;
         t = 0;
         while (i <= r) { // 결과를 numbers[p..r]에 저장
             nStore--;
-            numbers.set(i++, tmp[t++]);
+            numbers[i++] = tmp[t++];
             if (nStore == 0) {
-                sb.append(numbers.get(i - 1)).append("\n");
+                sb.append(numbers[i - 1]).append("\n");
                 return; // nStore가 0이 되면 결과를 출력하고 종료
             }
         }
