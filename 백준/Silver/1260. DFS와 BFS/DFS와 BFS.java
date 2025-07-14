@@ -34,79 +34,6 @@ public class Main {
     }
 }
 
-class Util {
-    static List<Integer> range(int first, int last) {
-        List<Integer> result = new ArrayList<>();
-        for (int i = first; i <= last; ++i) {
-            result.add(i);
-        }
-        return result;
-    }
-}
-
-class AbilityBoard implements IAbilityBoard {
-    final int N;
-    final int[][] S;
-
-    public AbilityBoard(final int N, final int[][] s) {
-        this.N = N;
-        this.S = s;
-    }
-
-    @Override
-    public int absScoreDiff(boolean[] teamCase) {
-        int team1Score = 0, team2Score = 0;
-
-        for (int i = 0; i < N; ++i) {
-            var myTeam = teamCase[i];
-
-            for (int j = i + 1; j < N; ++j) {
-                if (i == j)
-                    continue; // 자기 자신과의 능력치는 제외
-                if (myTeam == teamCase[j]) {
-                    // 같은 팀이면 능력치 합산
-                    if (myTeam) {
-                        team1Score += S[i][j] + S[j][i];
-                    } else {
-                        team2Score += S[i][j] + S[j][i];
-                    }
-                }
-            }
-        }
-        return Math.abs(team1Score - team2Score);
-    }
-
-}
-
-class Itertools<T> {
-
-    public List<Set<T>> combinations(List<T> iterable, int r) {
-        List<Set<T>> result = new ArrayList<>();
-        generateCombinations(iterable, r, 0, new LinkedHashSet<>(), result);
-        return result;
-    }
-
-    private void generateCombinations(List<T> iterable, int r, int start, Set<T> current, List<Set<T>> result) {
-        // 원하는 크기에 도달하면 결과에 추가
-        if (current.size() == r) {
-            result.add(new LinkedHashSet<>(current));
-            return;
-        }
-
-        // 남은 요소로 조합을 완성할 수 없으면 종료
-        if (iterable.size() - start < r - current.size()) {
-            return;
-        }
-
-        // start부터 끝까지 각 요소를 시도
-        for (int i = start; i < iterable.size(); i++) {
-            current.add(iterable.get(i));
-            generateCombinations(iterable, r, i + 1, current, result);
-            current.remove(iterable.get(i));
-        }
-    }
-}
-
 class Runner implements IRunner {
     final IReader reader;
     final BufferedWriter bw;
@@ -131,9 +58,6 @@ class Runner implements IRunner {
                 graph.computeIfAbsent(source, k -> new TreeSet<>()).add(dest);
                 graph.computeIfAbsent(dest, k -> new TreeSet<>()).add(source);
             });
-
-            for (Integer key : graph.keySet()) {
-            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -232,10 +156,6 @@ class Reader implements IReader {
     public List<String> lines() throws IOException {
         return br.lines().collect(Collectors.toList());
     }
-}
-
-interface IAbilityBoard {
-    int absScoreDiff(boolean[] teamCase);
 }
 
 interface IRunner {
