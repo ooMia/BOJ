@@ -28,7 +28,8 @@ public class Main {
 
 class Solution {
     public long solution(int A, int B) {
-        return (A + B) * (A - B);
+        long a = (long) A, b = (long) B;
+        return (a + b) * (a - b);
     }
 }
 
