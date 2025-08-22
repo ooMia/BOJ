@@ -28,32 +28,41 @@ public class Main {
 }
 
 class Solution {
+    final int N;
+    final String ioi;
 
-    final int N, M;
-    final String S;
+    final StringBuilder sb = new StringBuilder();
+    int count = 0;
 
-    Solution(int N, int M, String S) {
+    Solution(int N, String ioi) {
         this.N = N;
-        this.M = M;
-        this.S = S;
+        this.ioi = ioi;
     }
 
     public int solution() {
-        var ioiBuilder = new StringBuilder("IOI");
-        for (int i = 1; i < N; ++i) {
-            ioiBuilder.append("OI");
+        for (char c : ioi.toCharArray()) {
+            append(c);
         }
-        var ioi = ioiBuilder.toString();
-        var ioiLength = ioi.length();
-
-        int count = 0;
-        for (int i = 0; i <= M - ioiLength; ++i) {
-            var comp = S.substring(i, i + ioiLength);
-            if (comp.equals(ioi)) {
-                count++;
-            }
-        }
+        flush();
         return count;
+    }
+
+    void append(char c) {
+        var n = sb.length();
+        if ((n == 0 && c == 'I') || (n > 0 && sb.charAt(n - 1) != c))
+            sb.append(c);
+        else {
+            flush();
+            if (c == 'I')
+                sb.append(c);
+        }
+    }
+
+    void flush() {
+        var k = (sb.length() - 1) / 2;
+        if (N <= k)
+            count += k - N + 1;
+        sb.setLength(0);
     }
 }
 
@@ -62,16 +71,16 @@ class Runner {
     final BufferedWriter bw;
     final StringBuilder sb = new StringBuilder();
 
-    final int N, M;
-    final String S;
+    final int N;
+    final String ioi;
 
     Runner(BufferedReader br, BufferedWriter bw) {
         this.reader = new Reader(br);
         this.bw = bw;
         try {
-            this.N = Integer.valueOf(reader.line());
-            this.M = Integer.valueOf(reader.line());
-            this.S = reader.line();
+            this.N = Integer.parseInt(reader.line());
+            reader.skipLine();
+            this.ioi = reader.line();
 
             sb.ensureCapacity(20);
         } catch (IOException e) {
@@ -89,7 +98,7 @@ class Runner {
     }
 
     public void run() throws IOException {
-        var sol = new Solution(N, M, S);
+        var sol = new Solution(N, ioi);
         var res = sol.solution();
         sb.append(res).append('\n');
     }
@@ -102,7 +111,35 @@ class Reader {
         this.br = br;
     }
 
+    public void skipLine() throws IOException {
+        br.readLine();
+    }
+
+    public Stream<String> lines() throws IOException {
+        return br.lines();
+    }
+
     public String line() throws IOException {
         return br.readLine();
+    }
+
+    public int[] readInts() throws IOException {
+        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        int cnt = st.countTokens();
+        int[] ints = new int[cnt];
+        for (int i = 0; i < cnt; ++i) {
+            ints[i] = Integer.parseInt(st.nextToken());
+        }
+        return ints;
+    }
+
+    public List<Integer> readIntegers() throws IOException {
+        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        int cnt = st.countTokens();
+        List<Integer> res = new ArrayList<>(cnt);
+        for (int i = 0; i < cnt; ++i) {
+            res.add(Integer.parseInt(st.nextToken()));
+        }
+        return res;
     }
 }
