@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
@@ -49,11 +50,7 @@ class Solution {
     }
 
     public int solution() {
-        var pq = new PriorityQueue<Point>((o1, o2) -> {
-            if (o1.dist != o2.dist)
-                return Integer.compare(o1.dist, o2.dist);
-            return Integer.compare(o1.nBreak, o2.nBreak);
-        });
+        var pq = new PriorityQueue<Point>(Comparator.comparingInt(p -> p.dist));
         pq.offer(new Point(0, 0, 1, 0));
 
         while (!pq.isEmpty()) {
