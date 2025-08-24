@@ -5,9 +5,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
 import java.util.stream.Stream;
@@ -36,7 +35,7 @@ class Solution {
     final String[] grid;
     final int limitBreak;
 
-    final byte[][] visited;
+    final int[][][] visited; // [부순 벽의 수][행][열] = 거리
     final int[][] directions = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
 
     public Solution(int nRows, int nCols, String[] grid, int limitBreak) {
@@ -45,55 +44,63 @@ class Solution {
         this.grid = grid;
         this.limitBreak = limitBreak;
 
-        this.visited = new byte[nRows][nCols];
-        for (int i = 0; i < nRows; ++i) {
-            Arrays.fill(visited[i], (byte) -1);
-        }
+        this.visited = new int[limitBreak + 1][nRows][nCols];
     }
 
     public int solution() {
-        Queue<Point> pq = new LinkedList<>();
-        pq.offer(new Point(0, 0, 1, 0));
+        Queue<Point> q = new LinkedList<>();
 
-        while (!pq.isEmpty()) {
-            var p = pq.poll();
+        q.offer(new Point(0, 0, 1, 0));
+        visited[0][0][0] = 1;
 
-            if (p.y == nRows - 1 && p.x == nCols - 1)
+        while (!q.isEmpty()) {
+            Point p = q.poll();
+
+            if (p.y == nRows - 1 && p.x == nCols - 1) {
                 return p.dist;
+            }
 
-            pq.addAll(p.neighbors());
+            int newDist = p.dist + 1;
+
+            for (var dir : directions) {
+                int newY = p.y + dir[0];
+                int newX = p.x + dir[1];
+
+                if (newY < 0 || nRows <= newY || newX < 0 || nCols <= newX)
+                    continue; // 좌표 유효성 판단
+
+                if (grid[newY].charAt(newX) == '0') { // 경우 1: 벽이 아닌 곳으로
+                    if (!isVisited(p.nBreak, newY, newX)) {
+                        visited[p.nBreak][newY][newX] = newDist;
+                        q.offer(new Point(newY, newX, newDist, p.nBreak));
+                    }
+                }
+                // 경우 2: 벽을 만남
+                else {
+                    var newBreak = p.nBreak + 1;
+                    // 벽을 더 부술 수 있고, 해당 상태로 방문한 적 없다면
+                    if (newBreak <= limitBreak && !isVisited(newBreak, newY, newX)) {
+                        visited[newBreak][newY][newX] = newDist;
+                        q.offer(new Point(newY, newX, newDist, newBreak));
+                    }
+                }
+            }
         }
         return -1;
     }
 
+    boolean isVisited(int nBreak, int y, int x) {
+        return visited[nBreak][y][x] > 0;
+    }
+
     class Point {
-        final int y, x, dist;
-        final byte nBreak;
+        final int y, x, dist, nBreak;
 
         Point(int y, int x, int dist, int nBreak) {
             this.y = y;
             this.x = x;
             this.dist = dist;
-            this.nBreak = (byte) nBreak;
-        }
-
-        List<Point> neighbors() {
-            var newDist = dist + 1;
-            var points = new ArrayList<Point>();
-            for (var dir : directions) {
-                var newY = y + dir[0];
-                var newX = x + dir[1];
-                if (newY < 0 || nRows <= newY || newX < 0 || nCols <= newX)
-                    continue;
-
-                byte newBreak = (byte) (nBreak + (grid[newY].charAt(newX) == '1' ? 1 : 0));
-                if (limitBreak < newBreak || visited[newY][newX] != -1 && visited[newY][newX] <= newBreak)
-                    continue;
-
-                points.add(new Point(newY, newX, newDist, newBreak));
-                visited[newY][newX] = newBreak;
-            }
-            return points;
+            this.nBreak = nBreak;
         }
     }
 }
