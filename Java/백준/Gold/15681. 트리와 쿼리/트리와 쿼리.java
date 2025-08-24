@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,24 +32,23 @@ public class Main {
 }
 
 class Solution {
-    final List<Set<Integer>> edges;
-    final Set<Integer> visited;
+    final Set<Integer>[] edges;
+    final BitSet visited;
     final int[] counts;
 
-    Solution(int nNodes, List<Set<Integer>> edges, int rootId) {
+    Solution(int nNodes, Set<Integer>[] edges, int rootId) {
         this.edges = edges;
-        this.visited = new HashSet<>(nNodes);
+        this.visited = new BitSet(nNodes + 1);
         this.counts = new int[nNodes + 1];
         count(rootId);
     }
 
     private void count(int rootId) {
-        var children = edges.get(rootId);
+        var children = edges[rootId];
         counts[rootId] = 1;
-        visited.add(rootId);
+        visited.set(rootId);
         for (var child : children) {
-            if (visited.contains(child))
-                continue;
+            if (visited.get(child)) continue;
             count(child);
             counts[rootId] += counts[child];
         }
@@ -65,7 +65,7 @@ class Runner {
     final StringBuilder sb = new StringBuilder();
 
     final int nNodes, rootId, nQueries;
-    final List<Set<Integer>> edges;
+    final Set<Integer>[] edges;
 
     Runner(BufferedReader br, BufferedWriter bw) {
         this.reader = new Reader(br);
@@ -76,15 +76,15 @@ class Runner {
             this.rootId = input[1];
             this.nQueries = input[2];
 
-            this.edges = new ArrayList<>(nNodes + 1);
+            this.edges = new HashSet[nNodes + 1];
             for (int i = 0; i < nNodes + 1; ++i) {
-                edges.add(new HashSet<>());
+                edges[i] = new HashSet<>();
             }
 
             for (int i = 1; i < nNodes; ++i) {
                 var edge = reader.readInts();
-                edges.get(edge[0]).add(edge[1]);
-                edges.get(edge[1]).add(edge[0]);
+                edges[edge[0]].add(edge[1]);
+                edges[edge[1]].add(edge[0]);
             }
 
             sb.ensureCapacity(20);
