@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.PriorityQueue;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 import java.util.stream.Stream;
 
@@ -51,7 +52,7 @@ class Solution {
     }
 
     public int solution() {
-        var pq = new PriorityQueue<Point>(Comparator.comparingInt(p -> p.dist));
+        Queue<Point> pq = new LinkedList<>();
         pq.offer(new Point(0, 0, 1, 0));
 
         while (!pq.isEmpty()) {
