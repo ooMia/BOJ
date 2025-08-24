@@ -75,9 +75,11 @@ class Solution {
                     continue;
                 set.put(groupId[newY][newX], length[newY][newX]);
             }
-            grid[p.y][p.x] -= '0';
-            grid[p.y][p.x] *= (set.values().stream().mapToInt(Integer::intValue).sum() + 1) % 10;
-            grid[p.y][p.x] += '0';
+
+            int sum = 0;
+            for (int value : set.values())
+                sum += value;
+            grid[p.y][p.x] = (char) (((sum + 1) % 10) + '0');
         }
 
         // 문자열을 이어붙여 반환
