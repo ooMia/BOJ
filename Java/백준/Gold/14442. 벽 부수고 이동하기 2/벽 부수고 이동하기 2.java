@@ -36,6 +36,7 @@ class Solution {
     final int limitBreak;
 
     final byte[][] visited;
+    final int[][] directions = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
 
     public Solution(int nRows, int nCols, String[] grid, int limitBreak) {
         this.nRows = nRows;
@@ -77,25 +78,21 @@ class Solution {
 
         List<Point> neighbors() {
             var newDist = dist + 1;
-            var directions = new int[][] { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
             var points = new ArrayList<Point>();
             for (var dir : directions) {
                 var newY = y + dir[0];
                 var newX = x + dir[1];
                 if (newY < 0 || nRows <= newY || newX < 0 || nCols <= newX)
                     continue;
-                var newBreak = nBreak + (grid[newY].charAt(newX) == '1' ? 1 : 0);
+
+                byte newBreak = (byte) (nBreak + (grid[newY].charAt(newX) == '1' ? 1 : 0));
                 if (limitBreak < newBreak || visited[newY][newX] != -1 && visited[newY][newX] <= newBreak)
                     continue;
+
                 points.add(new Point(newY, newX, newDist, newBreak));
-                visited[newY][newX] = (byte) newBreak;
+                visited[newY][newX] = newBreak;
             }
             return points;
-        }
-
-        @Override
-        public String toString() {
-            return String.format("Point [y=%s, x=%s, dist=%s, nBreak=%s]", y, x, dist, nBreak);
         }
     }
 }
