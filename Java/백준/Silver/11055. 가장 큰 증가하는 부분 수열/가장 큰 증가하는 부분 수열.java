@@ -50,7 +50,11 @@ class Solution {
             }
         }
 
-        return Arrays.stream(dp).max().getAsInt();
+        int res = Integer.MIN_VALUE;
+        for (int i = 0; i < N; i++) {
+            res = Math.max(res, dp[i]);
+        }
+        return res;
     }
 }
 
