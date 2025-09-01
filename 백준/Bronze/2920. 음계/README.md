@@ -26,3 +26,9 @@
 
  <p>첫째 줄에 ascending, descending, mixed 중 하나를 출력한다.</p>
 
+
+
+
+
+## 소스 코드
+- [음계.c](음계.c)
