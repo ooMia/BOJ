@@ -27,21 +27,18 @@ public class Main {
 
 class Solution {
     String solution(int N, int[] numbers) {
-        // 조화평균을 계산하기 위한 분자와 분모 초기화
-        long numerator = 0; // 역수의 합을 위한 분자
-        long denominator = 1; // 공통 분모 초기화
+        long numerator = 0, denominator = 1;
 
-        for (int i = 0; i < N; i++) {
-            long number = numbers[i];
-            // 현재 분모와 새로운 분모의 최소공배수 계산
+        // 주어진 자연수의 역수의 합
+        for (long number: numbers) {
             long lcm = lcm(denominator, number);
-            // 분자를 업데이트
-            numerator = numerator * (lcm / denominator) + (lcm / number);
-            denominator = lcm; // 분모 업데이트
+
+            numerator *= (lcm / denominator);
+            numerator += (lcm / number);
+            denominator = lcm;
         }
 
-        // 조화 평균의 결과는 denominator/numerator
-        long gcd = gcd(numerator, denominator); // 기약분수로 만들기
+        long gcd = gcd(numerator, denominator); // 기약분수화
         numerator /= gcd;
         denominator /= gcd;
 
