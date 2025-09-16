@@ -51,6 +51,7 @@ class Solution {
      * @return 1의 개수 총합
      */
     long solution(long A, long B) {
+        // [0, B] - [0, A-1] = [A, B]
         return countSetBits(B) - countSetBits(A - 1);
     }
 
@@ -66,30 +67,33 @@ class Solution {
         }
 
         // n의 최상위 비트(MSB) 위치를 찾습니다. (0-indexed)
-        // 예를 들어 n=13 (1101)이면, msbPos = 3
         int msbPos = getMsbPosition(n);
 
         // 1. [0, 2^msbPos - 1] 구간의 1의 개수
         // dp 배열의 정의에 따라 dp[msbPos-1] 입니다.
         long count = (msbPos > 0) ? dp[msbPos - 1] : 0;
 
-        // 2. [2^msbPos, n] 구간의 최상위 비트(MSB)에 대한 1의 개수
-        // 이 구간의 모든 수는 msbPos 위치에 1을 가집니다.
-        // 구간의 숫자 개수는 (n - 2^msbPos + 1) 입니다.
+        // 2. [2^msbPos, n] 구간에서 MSB를 포함한 1의 개수를 반영합니다.
+        // 구간의 숫자 개수는 (n - 2^msbPos + 1)입니다.
         long remainder = n - (1L << msbPos);
         count += (remainder + 1);
 
         // 3. [2^msbPos, n] 구간에서 MSB를 제외한 나머지 비트들의 1의 개수
         // 이는 [0, remainder] 구간의 1의 개수와 같습니다.
-        // 재귀적으로 계산합니다.
         count += countSetBits(remainder);
 
         return count;
     }
 
+    /**
+     * n의 최상위 비트(MSB) 위치를 찾습니다. (0-indexed)
+     * 예를 들어 n=13 (1101)이면, msbPos = 3
+     * 
+     * @param n 자연수
+     * @return 최상위 비트 위치
+     */
     int getMsbPosition(long n) {
         int pos = 0;
-        // 1L을 계속 왼쪽으로 시프트하면서 n보다 커지기 직전까지의 위치를 찾습니다.
         while ((1L << (pos + 1)) <= n) {
             pos++;
         }
@@ -138,7 +142,7 @@ class Reader {
     public Reader(BufferedReader br) {
         this.br = br;
     }
-
+    
     public long[] readLongs() throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine(), " ");
         int cnt = st.countTokens();
