@@ -30,13 +30,7 @@ public class Main {
 }
 
 class Solution {
-    private final Map<Integer, Integer> closet;
-
-    Solution(Map<Integer, Integer> closet) {
-        this.closet = closet;
-    }
-
-    int solution() {
+    int solution(Map<String, Integer> closet) {
         int res = 1;
         for (int cnt : closet.values()) {
             res *= (cnt + 1); // 해당 종류를 입지 않는 경우 포함
@@ -49,17 +43,16 @@ class Runner {
     final Reader reader;
     final BufferedWriter bw;
 
-    final int N;
-    final Map<Integer, Integer> closet = new HashMap<>();
+    final Map<String, Integer> closet = new HashMap<>();
 
     Runner(BufferedReader br, BufferedWriter bw) {
         this.reader = new Reader(br);
         this.bw = bw;
         try {
-            N = Integer.parseInt(br.readLine());
+            int N = Integer.parseInt(br.readLine());
             for (int i = 0; i < N; ++i) {
                 String[] parts = br.readLine().split(" ");
-                int type = parts[1].hashCode();
+                String type = parts[1];
                 closet.put(type, closet.getOrDefault(type, 0) + 1);
             }
 
@@ -78,8 +71,8 @@ class Runner {
     }
 
     public void run() throws IOException {
-        var sol = new Solution(closet);
-        var res = sol.solution();
+        var sol = new Solution();
+        var res = sol.solution(closet);
         bw.write(String.valueOf(res));
     }
 }
