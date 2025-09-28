@@ -31,13 +31,13 @@ class Solution {
 
     final private double upperBoundRate = 1.05;
 
-    int solution(Map<String, Integer> itemPrices, List<Map.Entry<String, Integer>> transactions) {
+    int solution(Map<String, Integer> itemPrices, List<Transaction> transactions) {
         int exceedCount = 0;
         for (var entry : transactions) {
-            int originalPrice = itemPrices.get(entry.getKey());
+            int originalPrice = itemPrices.get(entry.itemName);
             double limit = originalPrice * upperBoundRate;
 
-            if (entry.getValue() > limit) ++exceedCount;
+            if (entry.tradedPrice > limit) ++exceedCount;
         }
         return exceedCount;
     }
@@ -49,7 +49,7 @@ class Runner {
 
     final int N, M; // N: 물품의 개수, M: 거래 내역의 개수
     final Map<String, Integer> itemPrices;
-    final List<Map.Entry<String, Integer>> transactions;
+    final List<Transaction> transactions;
 
     Runner(BufferedReader br, BufferedWriter bw) {
         this.reader = new Reader(br);
@@ -68,7 +68,7 @@ class Runner {
             transactions = new java.util.ArrayList<>(M);
             for (int m = 0; m < M; ++m) {
                 var transaction = br.readLine().split(" ");
-                transactions.add(new java.util.AbstractMap.SimpleEntry<>(transaction[0], Integer.parseInt(transaction[1])));
+                transactions.add(new Transaction(transaction[0], Integer.parseInt(transaction[1])));
             }
 
         } catch (IOException e) {
@@ -117,5 +117,15 @@ class Reader {
             ints[i] = Integer.parseInt(st.nextToken());
         }
         return ints;
+    }
+}
+
+class Transaction {
+    String itemName;
+    int tradedPrice;
+
+    Transaction(String itemName, int tradedPrice) {
+        this.itemName = itemName;
+        this.tradedPrice = tradedPrice;
     }
 }
