@@ -45,3 +45,9 @@ otherwise it returns:
 
  <p>입력으로 주어진 각각의 a, b, c에 대해서, w(a, b, c)를 출력한다.</p>
 
+
+
+
+
+## 소스 코드
+- [신나는 함수 실행.java](신나는 함수 실행.java)
