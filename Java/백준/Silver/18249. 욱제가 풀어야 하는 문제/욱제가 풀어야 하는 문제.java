@@ -38,21 +38,23 @@ class Solution {
         }
     }
 
-    public int solution(int n) {
-        return dp[n];
+    public String solution(int[] ns) {
+        var sb = new StringBuilder();
+        for (var n : ns) {
+            sb.append(dp[n]).append('\n');
+        }
+        return sb.toString();
     }
 }
 
 class Runner {
     final BufferedWriter bw;
-    final BufferedReader br;
 
     final int T;
     final int[] ns;
 
     Runner(BufferedReader br, BufferedWriter bw) {
         this.bw = bw;
-        this.br = br;
 
         // var reader = new Reader(br);
         try {
@@ -77,10 +79,8 @@ class Runner {
 
     public void run() throws IOException {
         var sol = new Solution();
-        for (var n : ns) {
-            var res = sol.solution(n);
-            _write(String.format("%d\n", res));
-        }
+        var res = sol.solution(ns);
+        _write(res);
     }
 
     private void _write(Object o) {
