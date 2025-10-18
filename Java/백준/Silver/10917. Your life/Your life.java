@@ -38,19 +38,7 @@ class Solution {
         final int[] edges;  // 크기: m (유효 간선 수)
 
         Graph(int destId, int[][] paths) {
-            // 유효 간선만 반영하며 최대 노드 id 계산
-            int max = Math.max(1, destId);
-            int m = 0;
-            for (int[] e : paths) {
-                if (e == null || e.length < 2) continue;
-                int x = e[0], y = e[1];
-                if (x >= 1 && y >= 1 && x < y) {
-                    m++;
-                    if (x > max) max = x;
-                    if (y > max) max = y;
-                }
-            }
-            this.maxNodeId = max;
+            this.maxNodeId = destId;
 
             // 차수 계산
             int[] deg = new int[maxNodeId + 1];
