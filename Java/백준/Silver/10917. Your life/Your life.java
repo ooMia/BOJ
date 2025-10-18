@@ -43,24 +43,22 @@ class Solution {
             // 차수 계산
             int[] deg = new int[maxNodeId + 1];
             for (int[] e : paths) {
-                if (e == null || e.length < 2) continue;
-                int x = e[0], y = e[1];
-                if (1 <= x && x < y && y <= maxNodeId) deg[x]++;
+                int x = e[0];
+                ++deg[x];
             }
 
+            // CSR(Compressed Sparse Row) 형태로 그래프 저장
             // prefix sum으로 head 구성
             this.head = new int[maxNodeId + 2];
-            for (int i = 1; i <= maxNodeId; i++) head[i + 1] = head[i] + deg[i];
+            for (int i = 1; i <= maxNodeId; i++)
+                head[i + 1] = head[i] + deg[i];
 
             // edges 채우기
             this.edges = new int[head[maxNodeId + 1]];
             int[] cur = Arrays.copyOf(head, head.length);
             for (int[] e : paths) {
-                if (e == null || e.length < 2) continue;
                 int x = e[0], y = e[1];
-                if (1 <= x && x < y && y <= maxNodeId) {
-                    edges[cur[x]++] = y;
-                }
+                edges[cur[x]++] = y;
             }
         }
     }
@@ -69,7 +67,6 @@ class Solution {
     public int solution(int destId, Graph g) {
         if (destId == 1) return 0;
         if (g == null || g.maxNodeId < 1) return -1;
-        if (destId > g.maxNodeId) return -1;
 
         int n = g.maxNodeId;
         int[] dist = new int[n + 1];
@@ -146,10 +143,6 @@ class Runner {
 
     public void run() throws IOException {
         var sol = new Solution();
-        if (nInputs == 0) {
-            _write(-1);
-            return;
-        }
         var res = sol.solution(destId, graph);
         _write(res);
     }
