@@ -3,10 +3,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -36,77 +33,85 @@ public class Main {
 class Solution {
 
     static class Graph {
-
-        private final int maxNodeId;
-        private final int[][] adj;
+        final int maxNodeId;
+        final int[] head;   // 크기: maxNodeId + 2
+        final int[] edges;  // 크기: m (유효 간선 수)
 
         Graph(int destId, int[][] paths) {
-            // (x, y) = paths[0], paths[1]
-            // 1 <= x < y <= N
-            this.maxNodeId = destId;
-            this.adj = paths;
-            Arrays.sort(adj, (a, b) -> {
-                if (a[0] != b[0]) return Integer.compare(a[0], b[0]);
-                return Integer.compare(a[1], b[1]);
-            });
-        }
-
-        List<Integer> getNeighbors(int nodeId) {
-            // find neighbors of nodeId
-            // 1. find minimal index using binary search
-            // 2. collect neighbors until nodeId changes
-
-            int left = 0, right = adj.length - 1;
-            while (left <= right) {
-                int adder = right - left >= 2 ? (right - left) >>> 1 : 0;
-                int mid = left + adder;
-                if (adj[mid][0] < nodeId) {
-                    left = mid + 1;
-                } else {
-                    right = mid - 1;
+            // 유효 간선만 반영하며 최대 노드 id 계산
+            int max = Math.max(1, destId);
+            int m = 0;
+            for (int[] e : paths) {
+                if (e == null || e.length < 2) continue;
+                int x = e[0], y = e[1];
+                if (x >= 1 && y >= 1 && x < y) {
+                    m++;
+                    if (x > max) max = x;
+                    if (y > max) max = y;
                 }
             }
+            this.maxNodeId = max;
 
-            if (left >= adj.length || adj[left][0] != nodeId) {
-                return List.of();
+            // 차수 계산
+            int[] deg = new int[maxNodeId + 1];
+            for (int[] e : paths) {
+                if (e == null || e.length < 2) continue;
+                int x = e[0], y = e[1];
+                if (1 <= x && x < y && y <= maxNodeId) deg[x]++;
             }
 
-            List<Integer> neighbors = new ArrayList<>();
-            for (int i = left; i < adj.length && adj[i][0] == nodeId; ++i) {
-                neighbors.add(adj[i][1]);
+            // prefix sum으로 head 구성
+            this.head = new int[maxNodeId + 2];
+            for (int i = 1; i <= maxNodeId; i++) head[i + 1] = head[i] + deg[i];
+
+            // edges 채우기
+            this.edges = new int[head[maxNodeId + 1]];
+            int[] cur = Arrays.copyOf(head, head.length);
+            for (int[] e : paths) {
+                if (e == null || e.length < 2) continue;
+                int x = e[0], y = e[1];
+                if (1 <= x && x < y && y <= maxNodeId) {
+                    edges[cur[x]++] = y;
+                }
             }
-            return neighbors;
         }
     }
 
-    public int solution(int destId, Graph graph) {
-        PriorityQueue<State> pq = new PriorityQueue<>((a, b) -> Integer.compare(a.depth, b.depth));
-        pq.offer(new State(-1, -1, 1));
+    // 1에서 destId까지의 최소 변화 횟수. 불가능하면 -1
+    public int solution(int destId, Graph g) {
+        if (destId == 1) return 0;
+        if (g == null || g.maxNodeId < 1) return -1;
+        if (destId > g.maxNodeId) return -1;
 
-        boolean[] visited = new boolean[graph.maxNodeId + 1];
-        while (!pq.isEmpty()) {
-            State curr = pq.poll();
-            if (curr.to == destId) return curr.depth + 1;
+        int n = g.maxNodeId;
+        int[] dist = new int[n + 1];
+        Arrays.fill(dist, -1);
 
-            for (int neighbor : graph.getNeighbors(curr.to)) {
-                if (!visited[neighbor]) {
-                    pq.offer(new State(curr.depth + 1, curr.to, neighbor));
-                    visited[neighbor] = true;
+        // 고정 배열 큐(원형 큐)
+        int[] q = new int[Math.max(2, n + 1)];
+        int h = 0, t = 0;
+
+        dist[1] = 0;
+        q[t++] = 1;
+
+        while (h < t) {
+            int u = q[h++];
+            // 도착 체크
+            if (u == destId) return dist[u];
+
+            // CSR 범위: [head[u], head[u+1])
+            int begin = g.head[u];
+            int end = g.head[u + 1];
+            for (int i = begin; i < end; i++) {
+                int v = g.edges[i];
+                if (dist[v] == -1) {
+                    dist[v] = dist[u] + 1;
+                    if (v == destId) return dist[v];
+                    q[t++] = v;
                 }
             }
         }
-
         return -1;
-    }
-
-    class State {
-        int depth, from, to;
-
-        public State(int depth, int from, int to) {
-            this.depth = depth;
-            this.from = from;
-            this.to = to;
-        }
     }
 }
 
@@ -192,4 +197,3 @@ class Reader {
         return ints;
     }
 }
-
