@@ -1,0 +1,74 @@
+name: gh-pages-deployment
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Update sub README.md
+        run: |
+          # Loop over all directories in the repository
+          for dir in $(find . -mindepth 1 -type d); do
+          
+            # Skip irrelevant directories
+            if [[ $dir =~ ^\.\/\.github* ]] || [[ $dir =~ ^\.\/\.git* ]]; then
+              continue
+            fi
+            
+            if [ -z "$(find "$dir" -mindepth 1 -maxdepth 1 -type d)" ]; then
+              echo -e "\n\n\n" >> $dir/README.md
+              echo "## 소스 코드" >> $dir/README.md
+              for file in $(find $dir -type f); do
+                if [[ $(basename $file) != "README.md" ]]; then
+                  echo "- [$(basename $file)]($(basename $file))" >> $dir/README.md
+                fi
+              done
+            else
+              echo "[LOG] CREATE README.md at $dir: index of sub-directories"
+              echo "## $dir" > $dir/README.md || echo "Failed to create README in $dir"
+              echo "" >> $dir/README.md
+              for subdir in $(find $dir -mindepth 1 -maxdepth 1 -type d); do
+                echo "- [$(basename $subdir)]($(basename $subdir))" >> $dir/README.md
+              done
+            fi
+            
+          done
+        shell: bash
+
+      - name: Create root README.md
+        run: |
+          echo "" > ./README.md
+          for dir in $(find . -mindepth 1 -maxdepth 1 -type d); do
+            if [[ $dir =~ ^\.\/\.github* ]] || [[ $dir =~ ^\.\/\.git* ]]; then
+              continue
+            fi
+            echo "- [$(basename $dir)]($(basename $dir))" >> ./README.md
+          done
+        shell: bash
+
+      - name: Publish current workdir (which contains generated content) to GitHub Pages
+        uses: rayluo/github-pages-overwriter@v1.3
+
+        with:
+
+          # Optional. Default value "." means the root directory of your project will be published.
+          # You can use whatever directory your project uses, for example "wwwroot".
+          # Such a directory does *not* have to already exist in your repo,
+          # it could be an output directory created dynamically by your static website builder.
+          source-directory: .
+
+          # Optional. Default value "gh-pages".
+          # It specifies the temporary branch which hosts the static website.
+          # Each build will OVERWRITE this branch.
+          target-branch: gh-pages
