@@ -22,3 +22,9 @@
 
  <p>첫째<span class="s1"> </span>줄부터<span class="s1"> 2×N-1</span>번째<span class="s1"> </span>줄까지<span class="s1"> </span>차례대로<span class="s1"> </span>별을<span class="s1"> </span>출력한다<span class="s1">.</span></p>
 
+
+
+
+
+## 소스 코드
+- [별 찍기 － 13.c](별 찍기 － 13.c)

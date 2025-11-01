@@ -138,3 +138,8 @@
 </code></pre></div>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+
+
+## 소스 코드
+- [등차수열의 특정한 항만 더하기.java](등차수열의 특정한 항만 더하기.java)
