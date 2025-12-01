@@ -33,3 +33,9 @@
 
  <p>첫째 줄에 길이가 <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mi class="mjx-i"><mjx-c class="mjx-c1D441 TEX-I"></mjx-c></mjx-mi></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>N</mi></math></mjx-assistive-mml><span aria-hidden="true" class="no-mathjax mjx-copytext">\(N\)</span></mjx-container>인 SW 수열을 아무거나 하나 출력한다. SW 수열은 공백으로 구분해서 출력해야 한다.</p>
 
+
+
+
+
+## 소스 코드
+- [SW 수열 구하기.java](SW 수열 구하기.java)

@@ -47,3 +47,9 @@
 
  <p>solved.ac가 계산한 문제의 난이도를 출력한다.</p>
 
+
+
+
+
+## 소스 코드
+- [solved．ac.py](solved．ac.py)

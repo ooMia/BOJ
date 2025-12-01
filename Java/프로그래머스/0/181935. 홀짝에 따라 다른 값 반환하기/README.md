@@ -67,3 +67,8 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+
+
+## 소스 코드
+- [홀짝에 따라 다른 값 반환하기.java](홀짝에 따라 다른 값 반환하기.java)

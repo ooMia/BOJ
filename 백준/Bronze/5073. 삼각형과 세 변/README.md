@@ -32,3 +32,9 @@
 
  <p>각 입력에 맞는 결과 (Equilateral, Isosceles, Scalene, Invalid) 를 출력하시오.</p>
 
+
+
+
+
+## 소스 코드
+- [삼각형과 세 변.py](삼각형과 세 변.py)

@@ -62,3 +62,8 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+
+
+## 소스 코드
+- [같은 숫자는 싫어.py](같은 숫자는 싫어.py)
