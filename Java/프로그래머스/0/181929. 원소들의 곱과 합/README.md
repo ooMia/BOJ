@@ -68,3 +68,8 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+
+
+## 소스 코드
+- [원소들의 곱과 합.java](원소들의 곱과 합.java)

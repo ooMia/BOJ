@@ -30,3 +30,9 @@
 
  <p>각 테스트 케이스에 대해 x지점으로부터 y지점까지 정확히 도달하는데 필요한 최소한의 공간이동 장치 작동 횟수를 출력한다.</p>
 
+
+
+
+
+## 소스 코드
+- [Fly me to the Alpha Centauri.c](Fly me to the Alpha Centauri.c)

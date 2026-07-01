@@ -102,3 +102,8 @@
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+
+
+## 소스 코드
+- [유한소수 판별하기.java](유한소수 판별하기.java)

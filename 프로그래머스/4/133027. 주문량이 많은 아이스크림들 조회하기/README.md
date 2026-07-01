@@ -249,3 +249,8 @@ Empty
       </table>
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://school.programmers.co.kr/learn/challenges
+
+
+
+## 소스 코드
+- [주문량이 많은 아이스크림들 조회하기.sql](주문량이 많은 아이스크림들 조회하기.sql)

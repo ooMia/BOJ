@@ -28,3 +28,9 @@
 
  <p><code>SciComLove</code>에서 바뀐 글자의 개수를 출력합니다. 단, 대소문자가 다르면 서로 다른 문자로 취급합니다.</p>
 
+
+
+
+
+## 소스 코드
+- [SciComLove （2025）.java](SciComLove （2025）.java)
